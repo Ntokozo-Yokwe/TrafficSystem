@@ -179,14 +179,14 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -616,6 +616,7 @@ GameObject:
   - component: {fileID: 1998008324}
   - component: {fileID: 1998008323}
   - component: {fileID: 1998008322}
+  - component: {fileID: 1998008327}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -630,7 +631,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1998008321}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ab6878b17ac2d54796576546cc82801, type: 3}
   m_Name: 
@@ -716,6 +717,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1998008327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998008321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d90c7a9ea32f5624baab10a7f92710d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints:
+  - {fileID: 1609991797}
+  - {fileID: 595680053}
+  - {fileID: 1003514958}
+  - {fileID: 1487426474}
+  player: {fileID: 2080882610}
+  currentPosition: {fileID: 1998008326}
 --- !u!1 &2080882605
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,18 +763,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2080882605}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d3afab4d5f7e444fa148106651a4d66, type: 3}
+  m_Script: {fileID: 11500000, guid: 04a269ad6c058c24588e134dc66ff9b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 1609991797}
-  - {fileID: 595680053}
-  - {fileID: 1003514958}
-  - {fileID: 1487426474}
-  movementSpeed: 5
-  rotationSpeed: 2
 --- !u!136 &2080882607
 CapsuleCollider:
   m_ObjectHideFlags: 0

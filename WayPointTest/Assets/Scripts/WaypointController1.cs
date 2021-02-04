@@ -9,25 +9,26 @@ public class WaypointController1 : MonoBehaviour
     public List<Transform> waypoints = new List<Transform>();
     private Transform targetWaypoint;
     private int targetWaypointIndex = 0;
-    private float minDistance = 0.1f; //If the distance between the enemy and the waypoint is less than this, then it has reacehd the waypoint
+    private float minDistance = 0.1f; //If the distance between the object and the waypoint is less than this, then it has reacehd the waypoint
     private int lastWaypointIndex;
 
-    private float movementSpeed = 3.0f;
-    private float rotationSpeed = 2.0f;
+    private float movementSpeed = 5.0f;
+    private float rotationSpeed = 3.0f;
 
 
-    #region Patrolling variables
-    public enum PatrollerState
+    #region Object variables
+    public enum ObjectState
     {
-        PATROLLING,
-        StopForPedestrian,
+        InMotion,
+        StopMotion,
     };
 
-    PatrollerState state = PatrollerState.PATROLLING;
+    ObjectState state = ObjectState.InMotion;
 
     public Transform player;
+    public Transform currentPosition;
     private Transform lastKnownWaypoint;
-    private float inRange = 2.0f;
+    private float inRange = 5.0f;
     private float escapeDistance = 6.0f;
     #endregion
 
@@ -35,7 +36,7 @@ public class WaypointController1 : MonoBehaviour
     void Start()
     {
         lastWaypointIndex = waypoints.Count - 1;
-        targetWaypoint = waypoints[targetWaypointIndex]; //Set the first target waypoint at the start so the enemy starts moving towards a waypoint
+        targetWaypoint = waypoints[targetWaypointIndex]; //Set the first target waypoint at the start so the object starts moving towards a waypoint
     }
 
     // Update is called once per frame
@@ -43,25 +44,24 @@ public class WaypointController1 : MonoBehaviour
     {
 
         UpdateTransform();
-        ControlEnemyState();
+        ControlObjectState();
     }
 
-    void ControlEnemyState()
+    void ControlObjectState()
     {
         CheckDistanceToPlayer();
 
         switch (state)
         {
-            case PatrollerState.PATROLLING:
-
+            case ObjectState.InMotion:
                 float distance = Vector3.Distance(transform.position, targetWaypoint.position);
                 CheckDistanceToWaypoint(distance);
                 break;
 
-            case PatrollerState.StopForPedestrian:
-                Debug.Log("Here");
-                StartCoroutine(StopAtIntersection());
+            case ObjectState.StopMotion:
+                targetWaypoint = lastKnownWaypoint;
                 break;
+
 
         }
     }
@@ -70,48 +70,34 @@ public class WaypointController1 : MonoBehaviour
     {
         switch (state)
         {
-
-            case PatrollerState.StopForPedestrian:
-                Debug.Log("Here");
+            case ObjectState.InMotion:
                 if (Vector3.Distance(transform.position, player.position) < inRange)
                 {
-                    lastKnownWaypoint = targetWaypoint;
-                    state = PatrollerState.StopForPedestrian;
+                    targetWaypoint = lastKnownWaypoint;
+                    lastKnownWaypoint = currentPosition.transform;
+                    state = ObjectState.StopMotion;
                 }
                 break;
 
-            case PatrollerState.PATROLLING:
-                if (Vector3.Distance(transform.position, player.position) > escapeDistance) //Obstruction has been removed
+            case ObjectState.StopMotion:
+                if (Vector3.Distance(transform.position, player.position) > escapeDistance) //Player out of inRange
                 {
-                    state = PatrollerState.PATROLLING;
+                    //targetWaypoint = lastKnownWaypoint;
+                    ReturnToStartingPoint();
                 }
                 break;
         }
-    }
-
-    public IEnumerator StopAtIntersection()
-    {
-        Debug.Log("Here");
-        yield return new WaitForSeconds(5);
-        CheckDistanceToPlayer();
     }
 
     /// <summary>
-    /// Called when mover 
+    /// Called when the Object is moving again
     /// </summary>
     void ReturnToStartingPoint()
     {
-        Debug.Log("Here");
-        if (Vector3.Distance(transform.position, lastKnownWaypoint.position) < Vector3.Distance(transform.position, targetWaypoint.position))
-        {
-            targetWaypoint = lastKnownWaypoint;
-            state = PatrollerState.PATROLLING;
-        }
-        else
-        {
-            state = PatrollerState.PATROLLING;
-            targetWaypoint = lastKnownWaypoint;
-        }
+        targetWaypoint = lastKnownWaypoint;
+        state = ObjectState.InMotion;
+        
+
     }
 
     /// <summary>
@@ -127,7 +113,7 @@ public class WaypointController1 : MonoBehaviour
 
         transform.rotation = Quaternion.Slerp(transform.rotation, rotationToTarget, rotationStep);
 
-        Debug.DrawRay(transform.position, transform.forward * 50f, Color.green, 0f); //Draws a ray forward in the direction the mover is facing
+        Debug.DrawRay(transform.position, transform.forward * 50f, Color.green, 0f); //Draws a ray forward in the direction the object is facing
         Debug.DrawRay(transform.position, directionToTarget, Color.red, 0f); //Draws a ray in the direction of the current target waypoint
 
 
@@ -136,9 +122,9 @@ public class WaypointController1 : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks to see if the mover is within distance of the waypoint. If it is, it called the UpdateTargetWaypoint function 
+    /// Checks to see if the object is within distance of the waypoint. If it is, it called the UpdateTargetWaypoint function 
     /// </summary>
-    /// <param name="currentDistance">The mover current distance from the waypoint</param>
+    /// <param name="currentDistance">The objects current distance from the waypoint</param>
     void CheckDistanceToWaypoint(float currentDistance)
     {
         if (currentDistance <= minDistance)
@@ -149,7 +135,7 @@ public class WaypointController1 : MonoBehaviour
     }
 
     /// <summary>
-    /// Increaes the index of the target waypoint. If the mover has reached the last waypoint in the waypoints list, it resets the targetWaypointIndex to the first waypoint in the list (causes the mover to loop)
+    /// Increaes the index of the target waypoint. If the object has reached the last waypoint in the waypoints list, it resets the targetWaypointIndex to the first waypoint in the list (causes the object to loop)
     /// </summary>
     void UpdateTargetWaypoint()
     {
