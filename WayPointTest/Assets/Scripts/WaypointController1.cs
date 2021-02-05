@@ -11,25 +11,18 @@ public class WaypointController1 : MonoBehaviour
     private int targetWaypointIndex = 0;
     private float minDistance = 0.1f; //If the distance between the object and the waypoint is less than this, then it has reacehd the waypoint
     private int lastWaypointIndex;
+    public Transform currentPosition;
+    private Transform lastKnownWaypoint;
 
     private float movementSpeed = 5.0f;
     private float rotationSpeed = 3.0f;
 
 
     #region Object variables
-    public enum ObjectState
-    {
-        InMotion,
-        StopMotion,
-    };
-
-    ObjectState state = ObjectState.InMotion;
 
     public Transform player; //make a list of these transforms so we can add multiple obstruction objects to the array
-    public Transform currentPosition;
-    private Transform lastKnownWaypoint;
-    private float inRange = 5.0f;
-    private float escapeDistance = 6.0f;
+    private float inRange = 7.0f;
+    private float escapeDistance = 10.0f;
     #endregion
 
     // Use this for initialization
@@ -44,70 +37,18 @@ public class WaypointController1 : MonoBehaviour
     {
 
         UpdateTransform();
-        ControlObjectState();
-    }
-
-    void ControlObjectState()
-    {
-        CheckDistanceToPlayer();
-
-        switch (state)
+        if (Vector3.Distance(transform.position, player.position) < inRange)
         {
-            case ObjectState.InMotion:
-                float distance = Vector3.Distance(transform.position, targetWaypoint.position);
-                CheckDistanceToWaypoint(distance);
-                break;
-                
-            case ObjectState.StopMotion:
-                //ReturnToStartingPoint();
-                //targetWaypoint = lastKnownWaypoint;
-                //lastKnownWaypoint = currentPosition.transform;
-                //targetWaypoint = currentPosition.transform;
-                //ControlObjectState();
-                break;
-                
-
+            lastKnownWaypoint = targetWaypoint;
+            targetWaypoint = currentPosition.transform;
+        }
+        else if (Vector3.Distance(transform.position, player.position) > escapeDistance) //Player out of inRange
+        {
+            float distance = Vector3.Distance(transform.position, targetWaypoint.position);
+            CheckDistanceToWaypoint(distance);
         }
     }
-
-    void CheckDistanceToPlayer()
-    {
-        switch (state)
-        {
-            case ObjectState.InMotion:
-                if (Vector3.Distance(transform.position, player.position) < inRange)
-                {
-                    lastKnownWaypoint = targetWaypoint;
-                    targetWaypoint = currentPosition.transform;
-                    state = ObjectState.StopMotion;
-                    //CheckDistanceToPlayer();
-                }
-                break;
-
-            case ObjectState.StopMotion:
-                if (Vector3.Distance(transform.position, player.position) > escapeDistance) //Player out of inRange
-                {
-                    //state = ObjectState.InMotion;
-                    //targetWaypoint = lastKnownWaypoint;
-                    lastKnownWaypoint = targetWaypoint;
-                    ReturnToStartingPoint();
-                }
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Called when the Object is moving again
-    /// </summary>
-    void ReturnToStartingPoint()
-    {
-        state = ObjectState.InMotion;
-        targetWaypoint = lastKnownWaypoint;
-        
-        
-
-    }
-
+    
     /// <summary>
     /// Updating rotation and position values
     /// </summary>
@@ -123,14 +64,13 @@ public class WaypointController1 : MonoBehaviour
 
         Debug.DrawRay(transform.position, transform.forward * 50f, Color.green, 0f); //Draws a ray forward in the direction the object is facing
         Debug.DrawRay(transform.position, directionToTarget, Color.red, 0f); //Draws a ray in the direction of the current target waypoint
-
-
+    
 
         transform.position = Vector3.MoveTowards(transform.position, targetWaypoint.position, movementStep);
     }
 
     /// <summary>
-    /// Checks to see if the object is within distance of the waypoint. If it is, it called the UpdateTargetWaypoint function 
+    /// Checks to see if the object is within distance of the waypoint. If it is, it calls the UpdateTargetWaypoint function 
     /// </summary>
     /// <param name="currentDistance">The objects current distance from the waypoint</param>
     void CheckDistanceToWaypoint(float currentDistance)

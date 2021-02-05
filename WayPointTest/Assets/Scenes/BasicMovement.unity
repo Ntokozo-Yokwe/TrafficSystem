@@ -1455,8 +1455,8 @@ MonoBehaviour:
   - {fileID: 994678871}
   - {fileID: 734043737}
   - {fileID: 391497818}
-  player: {fileID: 1712095935}
   currentPosition: {fileID: 721555896}
+  player: {fileID: 1629334536}
 --- !u!1 &734043736
 GameObject:
   m_ObjectHideFlags: 0
@@ -1553,8 +1553,8 @@ MonoBehaviour:
   - {fileID: 957348198}
   - {fileID: 1328412958}
   - {fileID: 103757593}
+  currentPosition: {fileID: 0}
   player: {fileID: 1370297757}
-  currentPosition: {fileID: 791985321}
 --- !u!114 &791985323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3036,8 +3036,8 @@ MonoBehaviour:
   - {fileID: 2142424704}
   - {fileID: 1165181634}
   - {fileID: 1913253296}
-  player: {fileID: 1919571303}
   currentPosition: {fileID: 1370297757}
+  player: {fileID: 1629334536}
 --- !u!1 &1494890181
 GameObject:
   m_ObjectHideFlags: 0
@@ -3390,12 +3390,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypoints:
   - {fileID: 932418872}
-  - {fileID: 2142101635}
+  - {fileID: 614324475}
+  - {fileID: 2142424704}
+  - {fileID: 1165181634}
+  - {fileID: 1913253296}
   - {fileID: 994678871}
   - {fileID: 734043737}
   - {fileID: 391497818}
-  player: {fileID: 1370297757}
   currentPosition: {fileID: 1629334536}
+  player: {fileID: 1370297757}
 --- !u!1 &1689405153
 GameObject:
   m_ObjectHideFlags: 0
@@ -3716,8 +3719,8 @@ MonoBehaviour:
   - {fileID: 994678871}
   - {fileID: 734043737}
   - {fileID: 391497818}
-  player: {fileID: 721555896}
   currentPosition: {fileID: 1712095935}
+  player: {fileID: 721555896}
 --- !u!1 &1716198684
 GameObject:
   m_ObjectHideFlags: 0
@@ -4478,8 +4481,8 @@ MonoBehaviour:
   - {fileID: 2142424704}
   - {fileID: 1165181634}
   - {fileID: 1913253296}
-  player: {fileID: 1370297757}
   currentPosition: {fileID: 2123678778}
+  player: {fileID: 1370297757}
 --- !u!1 &2142101634
 GameObject:
   m_ObjectHideFlags: 0
