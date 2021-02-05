@@ -25,7 +25,7 @@ public class WaypointController1 : MonoBehaviour
 
     ObjectState state = ObjectState.InMotion;
 
-    public Transform player;
+    public Transform player; //make a list of these transforms so we can add multiple obstruction objects to the array
     public Transform currentPosition;
     private Transform lastKnownWaypoint;
     private float inRange = 5.0f;
@@ -57,11 +57,15 @@ public class WaypointController1 : MonoBehaviour
                 float distance = Vector3.Distance(transform.position, targetWaypoint.position);
                 CheckDistanceToWaypoint(distance);
                 break;
-
+                
             case ObjectState.StopMotion:
-                targetWaypoint = lastKnownWaypoint;
+                //ReturnToStartingPoint();
+                //targetWaypoint = lastKnownWaypoint;
+                //lastKnownWaypoint = currentPosition.transform;
+                //targetWaypoint = currentPosition.transform;
+                //ControlObjectState();
                 break;
-
+                
 
         }
     }
@@ -73,16 +77,19 @@ public class WaypointController1 : MonoBehaviour
             case ObjectState.InMotion:
                 if (Vector3.Distance(transform.position, player.position) < inRange)
                 {
-                    targetWaypoint = lastKnownWaypoint;
-                    lastKnownWaypoint = currentPosition.transform;
+                    lastKnownWaypoint = targetWaypoint;
+                    targetWaypoint = currentPosition.transform;
                     state = ObjectState.StopMotion;
+                    //CheckDistanceToPlayer();
                 }
                 break;
 
             case ObjectState.StopMotion:
                 if (Vector3.Distance(transform.position, player.position) > escapeDistance) //Player out of inRange
                 {
+                    //state = ObjectState.InMotion;
                     //targetWaypoint = lastKnownWaypoint;
+                    lastKnownWaypoint = targetWaypoint;
                     ReturnToStartingPoint();
                 }
                 break;
@@ -94,8 +101,9 @@ public class WaypointController1 : MonoBehaviour
     /// </summary>
     void ReturnToStartingPoint()
     {
-        targetWaypoint = lastKnownWaypoint;
         state = ObjectState.InMotion;
+        targetWaypoint = lastKnownWaypoint;
+        
         
 
     }
